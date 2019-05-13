@@ -1,0 +1,9 @@
+  apt_packages: ["apt-transport-https", "ca-certificates", "curl", "software-properties-common", "gnupg-agent"]
+  docker_pgp_key: "https://download.docker.com/linux/ubuntu/gpg"
+  docker_apt_reposity: https://download.docker.com/linux/ubuntu xenial stable
+  docker_packages: ["docker-ce","docker-ce-cli","containerd.io"]
+  swap_items: ["swap","none"]
+  k8s_pgp_key: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+  k8s_packages: ["kubelet","kubeadm","kubectl"]
+  apiserver-advertise-address: "192.168.50.10"
+  calico_yaml_url: "https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/hosted/calico.yaml"

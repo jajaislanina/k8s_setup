@@ -1,0 +1,4 @@
+- name: k8s-master
+  hosts: all
+  roles:
+    - k8s-master
