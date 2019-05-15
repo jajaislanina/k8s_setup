@@ -1,4 +1,4 @@
 - name: k8s-master
-  hosts: all
+  hosts: localhost
   roles:
     - k8s-master

@@ -56,8 +56,15 @@
       update_cache: yes
 
   - name: Initialize the Kubernetes cluster using kubeadm
-    command: kubeadm init --apiserver-advertise-address="{{ apiserver-advertise-address }}" --apiserver-cert-extra-sans="{{ apiserver-advertise-address }}"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16
+    shell: |
+      kubeadm init --apiserver-advertise-address={{ advertise_address }} \
+      --apiserver-cert-extra-sans={{ advertise_address }} \
+      --node-name k8s-master --pod-network-cidr={{ pod_network }}
   
+  - name: Configure Kubernetes cluster permissions
+    become: true
+    shell: cp /etc/kubernetes/admin.conf $HOME/ && chown $(id -u):$(id -g) $HOME/admin.conf && export KUBECONFIG=$HOME/admin.conf
+
   - name: Install calico pod network
     become: false
     command: kubectl create -f {{ calico_yaml_url }}
