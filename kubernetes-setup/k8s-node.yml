@@ -1,0 +1,4 @@
+- name: k8s-node
+  hosts: localhost
+  roles:
+    - k8s-node

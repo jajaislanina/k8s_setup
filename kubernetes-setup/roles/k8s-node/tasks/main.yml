@@ -55,41 +55,11 @@
       state: present
       update_cache: yes
 
-  - name: Initialize the Kubernetes cluster using kubeadm
-    shell: |
-      kubeadm init --apiserver-advertise-address={{ advertise_address }} \
-      --apiserver-cert-extra-sans={{ advertise_address }} \
-      --node-name k8s-master --pod-network-cidr={{ pod_network }}
+  - name: Copy the join command to server location
+    copy: 
+      src: join-command 
+      dest: /tmp/join-command.sh 
+      mode: 0777
 
-  - name: Create kube directory
-    file:
-      path: /home/vagrant/.kube
-      state: directory
-
-  - name: Copy admin conf
-    copy:
-      src: /etc/kubernetes/admin.conf
-      dest: /home/vagrant/.kube/admin.conf
-      force: yes
-      owner: vagrant
-      group: vagrant
-
-  - name: set environmental variable
-    lineinfile:
-      dest: "/etc/environment"
-      state: present
-      regexp: "^KUBECONFIG"
-      line: "KUBECONFIG=/home/vagrant/.kube/admin.conf"
-
-  - name: Install flannel pod network
-    become: false
-    shell: kubectl create -f {{ flannel_yaml_url }}
-    environment: 
-      KUBECONFIG: /home/vagrant/.kube/admin.conf
-
-  - name: Generate join command
-    command: kubeadm token create --print-join-command
-    register: join_command
-
-  - name: Copy join command to local file
-    local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command"
+  - name: Join the node to cluster
+    command: sh /tmp/join-command.sh

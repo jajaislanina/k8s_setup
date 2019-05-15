@@ -23,21 +23,13 @@ Vagrant.configure("2") do |config|
         master.vm.provision :shell, path: "scripts/ansible-master.sh"
     end
 
-    # config.vm.define "ansible" do |cfg|
-	# 	cfg.vm.box = "ubuntu/bionic64"
-	# 	cfg.vm.hostname = "ansible"
-	# 	cfg.vm.network "private_network", ip: "192.168.50.5"
-	# 	cfg.vm.provision :shell, path: "scripts/install-ansible.sh"
-	# 	cfg.vm.provider "virtualbox" do |v|
-	# 	  v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]            
-	# 	  v.memory = 4096
-	# 	end
-	# end
-    # (1..N).each do |i|
-    #     config.vm.define "node-#{i}" do |node|
-    #         node.vm.box = IMAGE_NAME
-    #         node.vm.network "private_network", ip: "192.168.50.#{i + 10}"
-    #         node.vm.hostname = "node-#{i}"
-    #     end
-    # end
+    (1..N).each do |i|
+        config.vm.define "node-#{i}" do |node|
+            node.vm.box = IMAGE_NAME
+            node.vm.network "private_network", ip: "192.168.50.#{i + 10}"
+            node.vm.hostname = "node-#{i}"
+            node.vm.provision :shell, path: "scripts/install-ansible.sh"
+            node.vm.provision :shell, path: "scripts/ansible-node.sh"
+        end
+    end
 end

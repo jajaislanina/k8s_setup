@@ -5,6 +5,3 @@
   swap_items: ["swap","none"]
   k8s_pgp_key: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
   k8s_packages: ["kubelet","kubeadm","kubectl"]
-  advertise_address: "192.168.50.10"
-  pod_network: "192.168.0.0/16"
-  flannel_yaml_url: "https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
