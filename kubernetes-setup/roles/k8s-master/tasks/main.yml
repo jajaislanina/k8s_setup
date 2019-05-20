@@ -55,12 +55,19 @@
       state: present
       update_cache: yes
 
+  - name: set environmental variable for kubelet
+    lineinfile:
+      dest: "/etc/environment"
+      state: present
+      regexp: "^KUBELET_EXTRA_ARGS"
+      line: "KUBELET_EXTRA_ARGS=--node-ip={{ advertise_address }}"
+
   - name: Initialize the Kubernetes cluster using kubeadm
     shell: |
       kubeadm init --apiserver-advertise-address={{ advertise_address }} \
       --apiserver-cert-extra-sans={{ advertise_address }} \
       --node-name k8s-master --pod-network-cidr={{ pod_network }}
-
+      
   - name: Create kube directory
     file:
       path: /home/vagrant/.kube
@@ -80,10 +87,10 @@
       state: present
       regexp: "^KUBECONFIG"
       line: "KUBECONFIG=/home/vagrant/.kube/admin.conf"
-
-  - name: Install flannel pod network
+      
+  - name: Install network plugin
     become: false
-    shell: kubectl create -f {{ flannel_yaml_url }}
+    shell: kubectl create -f {{ network_yaml_url }}
     environment: 
       KUBECONFIG: /home/vagrant/.kube/admin.conf
 

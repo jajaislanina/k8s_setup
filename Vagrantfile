@@ -1,5 +1,5 @@
 IMAGE_NAME = "bento/ubuntu-16.04"
-N = 2
+N = 1
 
 Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
@@ -22,7 +22,11 @@ Vagrant.configure("2") do |config|
         master.vm.provision :shell, path: "scripts/install-ansible.sh"
         master.vm.provision :shell, path: "scripts/ansible-master.sh"
     end
-
+    config.vm.define "ubuntu-desktop" do |desktop|
+        desktop.vm.box = "peru/ubuntu-18.04-desktop-amd64"
+        desktop.vm.network "private_network", ip: "192.168.50.40"
+    end
+ 
     (1..N).each do |i|
         config.vm.define "node-#{i}" do |node|
             node.vm.box = IMAGE_NAME
